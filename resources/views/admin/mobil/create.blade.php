@@ -1,7 +1,7 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">Tambah Mobil</h2>
-    <form action="/admin/mobil/create" method="POST">
+    <form action="{{route('mobil.store')}}" method="POST">
         @csrf
         
         <div class="mb-3">

@@ -30,9 +30,9 @@ Route::prefix('/admin')->group(function(){
 
     Route::get('/halaman', [DashboardController::class,'index']);
     
-    Route::get('/mobil/index', [CarController::class, 'index']);
+    Route::get('/mobil/index', [CarController::class, 'index'])->
     Route::get('/mobil/create', [CarController::class, 'create']); 
-    Route::post('/mobil/create', [CarController::class, 'store']); 
+    Route::post('/mobil/create', [CarController::class, 'store'])->name('mobil.store'); 
     Route::get('/mobil/{id}', [CarController::class, 'show']); 
     Route::get('/mobil/{id}/edit', [CarController::class, 'edit']); 
     Route::put('/mobil/{id}', [CarController::class, 'update']); 
