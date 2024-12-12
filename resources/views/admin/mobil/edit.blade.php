@@ -12,10 +12,17 @@
     @endif
 
     
-    <form action="/admin/mobil/{{ $car->id }}" method="POST">
+    <form action="{{ route('car.update',$car->id) }}}}" enctype="multipart/form-data" method="POST">
         @csrf
         @method('PUT')
-
+        <img src="{{ asset('storage/'.$car->image) }}" alt="foto" class="img-thumbnail" style="width: 8rem;height: 8rem;">
+        <div class="mb-3">
+            <label class="form-label">Foto Mobil</label>
+            <input type="file" class="form-control" id="jenisMobil" name="image">
+            @error('image')
+                <span class="text-danger"><small>{{ $message }}</small></span>
+            @enderror
+        </div>
         <div class="form-group">
             <label for="jenis_mobil">Jenis Mobil</label>
             <input type="text" name="jenis_mobil" id="jenis_mobil" class="form-control" value="{{ $car->jenis_mobil }}" required>
@@ -42,6 +49,6 @@
         </div>
 
         <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-        <a href="/admin/mobil/index" class="btn btn-secondary">Batal</a>
+        <a href="{{ route('car.index') }}" class="btn btn-secondary">Batal</a>
     </form>
 </div>

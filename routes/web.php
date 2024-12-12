@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\ReversionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,26 +18,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
+Route::get('',[AuthController::class,'login'])->name('login');
+Route::post('',[AuthController::class,'loginProcess'])->name('login.process');
+Route::get('register',[AuthController::class,'register'])->name('register');
+Route::post('register',[AuthController::class,'registerProcess'])->name('register.process');
 
-Route::prefix('/admin')->group(function(){
+Route::get('/halaman', [DashboardController::class,'index']);
 
-    
-    Route::get('/dashboard', function(){
-        return view('admin.layouts.wrapper');
-    });
-    
+Route::middleware(["auth"])->group(function () {
+    Route::get('/logout', [AuthController::class,'logout'])->name('logout');
 
-    Route::get('/halaman', [DashboardController::class,'index']);
-    
-    Route::get('/mobil/index', [CarController::class, 'index']);
-    Route::get('/mobil/create', [CarController::class, 'create']); 
-    Route::post('/mobil/create', [CarController::class, 'store']); 
-    Route::get('/mobil/{id}', [CarController::class, 'show']); 
-    Route::get('/mobil/{id}/edit', [CarController::class, 'edit']); 
-    Route::put('/mobil/{id}', [CarController::class, 'update']); 
-    Route::delete('/mobil/{id}', [CarController::class, 'destroy']); 
+    Route::resource('user',DashboardController::class);
+    Route::resource('car',CarController::class);
+    Route::resource('rent',LoanController::class);
+    Route::post('rent-update-status/{loan}',[LoanController::class,'updateStatus'])->name('rent.update-status');
+    Route::get('get-car/{car?}',[LoanController::class,'getCar'])->name('rent.get-car');
+    Route::resource('return',ReversionController::class);
 });
