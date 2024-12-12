@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('image');
             $table->string('jenis_mobil');
             $table->string('merek_mobil');
             $table->string('warna_mobil');
             $table->string('plat_nomor')->unique();
             $table->string('harga_sewa_per_hari');
+            $table->enum('status',["Available","Not Available"])->default("Available");
         });
     }
 

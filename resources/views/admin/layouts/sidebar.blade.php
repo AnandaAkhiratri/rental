@@ -1,30 +1,22 @@
 <div class="main-sidebar sidebar-style-2">
   <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
-      <a href="index.html">Stisla</a>
+      <a href="index.html">RENT CAR</a>
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
-      <a href="index.html">St</a>
+      <a href="index.html">RC</a>
     </div>
     <ul class="sidebar-menu">
 
-      <li class="menu-header">Dashboard</li>
-      
-      <li class="dropdown active">
-        <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-        <ul class="dropdown-menu">
-          <li><a class="nav-link-active" href="/admin/mobil/index">Data Mobil</a></li>
-          <li><a class="nav-link" href="/admin/pasien">Peminjaman Mobil</a></li>
-          <li><a class="nav-link" href="/admin/penyakit">Pengembalian Mobil</a></li>
-          <li><a class="nav-link" href="/admin/penyakit">Penyewa Mobil</a></li>
-          {{-- <li class="{{Request::is('admin /user*') ? 'active' : ''}} "><a class="nav-link " href="/admin/user">Penyewa Mobil</a></li> --}}
-        </ul>
-      </li>
+      <li class="menu-header">Master Data</li>
+      <li class="{{ Request::is('car*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('car.index') }}"><i class="fas fa-car"></i> <span>Data Mobil</span></a></li>
+      @if (auth()->user()->role == "ADM")
+        <li class="{{ Request::is('user*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('user.index') }}"><i class="fas fa-users"></i> <span>Data Pengguna</span></a></li>          
+      @endif
+      <li class="menu-header">Transaksi</li>
+      <li class="{{ Request::is('rent*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('rent.index') }}"><i class="fas fa-clipboard"></i> <span>Peminjaman  Mobil</span></a></li>
+      <li class="{{ Request::is('return*') ? 'active' : '' }}"><a class="nav-link" href="{{ route('return.index') }}"><i class="fas fa-clipboard-list"></i> <span>Pengembalian  Mobil</span></a></li>
     </ul>
 
-    <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-      <a href="https://getstisla.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split">
-        <i class="fas fa-rocket"></i> Documentation
-      </a>
-    </div></aside>
+  </aside>
 </div>

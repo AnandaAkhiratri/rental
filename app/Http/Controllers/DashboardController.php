@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -12,10 +13,11 @@ class DashboardController extends Controller
     public function index()
     {
         $data = [
-            'content' => 'admin/dashboard/index'
+            'content' => 'admin/user/index'
         ];
-
-        return view('admin.layouts.wrapper', $data);
+        $title = "Pengguna";
+        $dt = User::where('role','USR')->get();
+        return view('admin.layouts.wrapper', $data,compact('title','dt'));
     }
 
     /**

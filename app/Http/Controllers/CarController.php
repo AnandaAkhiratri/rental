@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Car;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller
 {
@@ -16,9 +17,9 @@ class CarController extends Controller
             'content' => 'admin/mobil/index'
         ];
         $cars = Car::  all();
-        
+        $title = "Car";
         // Kirim data ke view
-        return view('admin.layouts.wrapper',$data, compact('cars'));
+        return view('admin.layouts.wrapper',$data, compact('cars','title'));
     }
 
     /**
@@ -29,7 +30,8 @@ class CarController extends Controller
         $data = [
             'content' => '/admin/mobil/create'
         ];
-        return view('admin.layouts.wrapper', $data);
+        $title = "Car";
+        return view('admin.layouts.wrapper', $data,compact('title'));
     }
 
     /**
@@ -38,31 +40,17 @@ class CarController extends Controller
     public function store(Request $request)
     {
         // Validasi input
-        $request->validate([
+       $data =  $request->validate([
+            'image' => 'required|mimes:jpeg,png,jpg',
             'jenis_mobil' => 'required|string|max:255',
             'merek_mobil' => 'required|string|max:255',
             'warna_mobil' => 'required|string|max:255',
             'plat_nomor' => 'required|string|max:255|unique:cars,plat_nomor',
             'harga_sewa_per_hari' => 'required|string|max:255',
-        ]);
-
-        
-        Car::create($request->all());
-
-        
-        return redirect('/admin/mobil/index')->with('message', 'Data Berhasil Ditambahkan');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        
-        $car = Car::findOrFail($id);
-        
-    
-        return view('admin.mobil.show', compact('car'));
+        ]);    
+        $data['image'] = $request->image->store('car');
+        Car::create($data);
+        return redirect(route('car.index'))->with('message', 'Data Berhasil Ditambahkan');
     }
 
     /**
@@ -75,9 +63,8 @@ class CarController extends Controller
         ];
         
         $car = Car::findOrFail($id);
-        
-        
-        return view('admin.layouts.wrapper',$data, compact('car'));
+        $title = "Car";        
+        return view('admin.layouts.wrapper',$data, compact('car','title'));
     }
 
     /**
@@ -86,18 +73,21 @@ class CarController extends Controller
     public function update(Request $request, $id)
     {
         
-        $request->validate([
+        $data = $request->validate([
+            'image' => 'image|mimes:jpeg,png,jpg',
             'jenis_mobil' => 'required|string|max:255',
             'merek_mobil' => 'required|string|max:255',
             'warna_mobil' => 'required|string|max:255',
             'plat_nomor' => 'required|string|max:255|unique:cars,plat_nomor,' . $id,
             'harga_sewa_per_hari' => 'required|string|max:255',
-        ]);
-
-        
+        ]);        
         $car = Car::findOrFail($id);
-        $car->update($request->all());
-        return redirect('/admin/mobil/index')->with('message', 'Data Berhasil Diperbarui');
+        if ($request->image) {
+            $data["image"] = $request->image->store('car');
+            Storage::delete($car->image);
+        }
+        $car->update($data);
+        return redirect(route('car.index'))->with('message', 'Data Berhasil Diperbarui');
     }
 
     /**
@@ -106,11 +96,11 @@ class CarController extends Controller
     public function destroy($id)
     {
         $car = Car::findOrFail($id);
-
+        Storage::delete($car->image);
         
         $car->delete();
 
         
-        return redirect('/admin/mobil/index')->with('message', 'Data Berhasil Dihapus');
+        return redirect(route('car.index'))->with('message', 'Data Berhasil Dihapus');
     }
 }
